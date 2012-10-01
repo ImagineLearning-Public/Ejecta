@@ -135,6 +135,10 @@ EJ_BIND_SET(currentTime, ctx, value) {
 	[source setCurrentTime:time];
 }
 
+EJ_BIND_GET(duration, ctx) {
+	return JSValueMakeNumber( ctx, [source getDuration] );
+}
+
 EJ_BIND_GET(src, ctx) {
 	return path ? NSStringToJSValue(ctx, path) : NULL;
 }

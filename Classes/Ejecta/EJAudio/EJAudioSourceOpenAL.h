@@ -10,6 +10,7 @@
 @interface EJAudioSourceOpenAL : NSObject <EJAudioSource> {
 	NSString * path;
 	NSUInteger bufferId, sourceId;
+    float duration;
 }
 
 - (void*)getAudioDataWithURL:(NSURL *)inFileURL size:(ALsizei *)outDataSize format:(ALenum *)outDataFormat rate:(ALsizei *)outSampleRate;

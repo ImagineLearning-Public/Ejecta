@@ -42,7 +42,6 @@
 	alGenBuffers( 1, &bufferId );
 	alBufferData( bufferId, format, data, size, freq ); 
 	
-	
 	alGenSources(1, &sourceId); 
 	alSourcei(sourceId, AL_BUFFER, bufferId);
 	alSourcef(sourceId, AL_PITCH, 1.0f);
@@ -129,6 +128,8 @@
 			*outDataSize = (ALsizei)dataSize;
 			*outDataFormat = (theOutputFormat.mChannelsPerFrame > 1) ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
 			*outSampleRate = (ALsizei)theOutputFormat.mSampleRate;
+            
+            duration = (float)(dataSize * 8) / (float)(theOutputFormat.mChannelsPerFrame * theOutputFormat.mBitsPerChannel) / (float)theOutputFormat.mSampleRate;
 		}
 		else { 
 			// failure
@@ -172,6 +173,10 @@ Exit:
 
 - (void)setCurrentTime:(float)time {
 	alSourcef( sourceId, AL_SEC_OFFSET,  time );
+}
+
+- (float)getDuration {
+    return duration;
 }
 
 @end

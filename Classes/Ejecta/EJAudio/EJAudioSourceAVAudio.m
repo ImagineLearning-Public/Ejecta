@@ -65,4 +65,8 @@
 	}
 }
 
+- (float)getDuration {
+    return player.duration;
+}
+
 @end
