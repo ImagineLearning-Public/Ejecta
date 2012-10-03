@@ -76,7 +76,7 @@ typedef std::vector<subpath_t> path_t;
 	distanceTolerance = EJ_PATH_DISTANCE_EPSILON / scale;
 	distanceTolerance *= distanceTolerance;
 	
-	EJVector2 cp1 = EJVector2ApplyTransform(EJVector2Make(cpx1, cpy2), transform);
+	EJVector2 cp1 = EJVector2ApplyTransform(EJVector2Make(cpx1, cpy1), transform);
 	EJVector2 cp2 = EJVector2ApplyTransform(EJVector2Make(cpx2, cpy2), transform);
 	EJVector2 p = EJVector2ApplyTransform(EJVector2Make(x, y), transform);
 	
@@ -409,16 +409,20 @@ typedef std::vector<subpath_t> path_t;
 			back = sp->back();
 		
 		// If back and front are equal, this subpath is closed.
-		BOOL subPathIsClosed = (sp->size() > 2 && front.x == back.x && front.y == back.y);
-		BOOL ignoreFirstSegment = addMiter && subPathIsClosed;
+		BOOL subPathIsClosed = addMiter && (sp->size() > 2 && front.x == back.x && front.y == back.y);
+		BOOL ignoreFirstSegment = subPathIsClosed;
 		BOOL firstInSubPath = true;
+		
+		transCurrent = transNext = NULL;
 		
 		// If this subpath is closed, initialize the first vertex for the loop ("next")
 		// to the last vertex in the subpath. This way, the miter between the last and
 		// the first segment will be computed and used to draw the first segment's first
 		// miter, as well as the last segment's last miter outside the loop.
-		transNext = subPathIsClosed ? &sp->at(sp->size()-2) : NULL;
-		transCurrent = NULL;
+		if( subPathIsClosed ) {
+			transNext = &sp->at(sp->size()-2);
+			next = EJVector2ApplyTransform( *transNext, inverseTransform );
+		}
 
 		for( subpath_t::iterator vertex = sp->begin(); vertex != sp->end(); ++vertex) {
 			transCurrent = transNext;
